@@ -652,6 +652,7 @@ const ADMIN = (() => {
       `<div class="lxa-row">${F.text('store.coupon', 'Código do cupom', { max: 24 })}${F.num('store.couponPct', 'Desconto (%)', { min: 0, max: 90 })}</div>` +
         F.toggle('store.showCouponPrice', 'Mostrar preço com cupom nos produtos', 'Ex.: "⚡ R$ 134,91 com LUXX10"') +
         F.toggle('store.cart', 'Sacola de compras', 'O cliente junta as peças e finaliza no WhatsApp', true) +
+        F.toggle('store.search', 'Lupa de pesquisa', 'O cliente procura as peças pelo nome', true) +
         '<div style="height:10px"></div>' +
         `<div class="lxa-row">${F.num('store.installments', 'Parcelas sem juros (até)', { min: 1, max: 24 })}${F.money('store.minInstallment', 'Parcela mínima (R$)')}</div>` +
         F.money('store.freeShipping', 'Frete grátis acima de (R$)', { hint: 'Coloque 0 para não mostrar frete grátis.' })

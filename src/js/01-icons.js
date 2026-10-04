@@ -3,6 +3,7 @@
    ========================================================================== */
 const ICONS = {
   bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" stroke="none"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   bag: '<path d="M6 7h12l1 13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h10"/>',
   close: '<path d="M6 6l12 12M18 6 6 18"/>',

@@ -11,6 +11,7 @@ Preto + amarelo raio, textos de impacto em português e funciona no celular e no
 - **Categorias**: camisetas, moletons, tênis, slides, jaquetas, calças, bermudas, bonés e acessórios
 - **Promoção com o cupom LUXX10**: 10% OFF em qualquer compra, botão de copiar o cupom
 - **Catálogo completo** com filtro por categoria e ordenação
+- **Lupa de pesquisa** no topo: o cliente digita o nome da peça e vê os resultados na hora (sem se preocupar com acento, plural ou maiúscula; entende sinônimos como "chinelo" → slides). Se não achar nada, aparece um botão para perguntar no WhatsApp. No computador, a tecla `/` abre a pesquisa
 - **Compra pelo WhatsApp**: cada produto tem "Comprar" (escolhe o tamanho) e um botão de WhatsApp. A **sacola** junta as peças, aplica o cupom e manda o pedido pronto no WhatsApp
 - **Bolinha de vídeo**: o vídeo das roupas fica rodando numa bolinha que o cliente **arrasta para onde quiser** (a posição fica salva). Ao tocar, abre o vídeo grande com som e botões de compra
 - **Rodapé** com redes sociais (Instagram, TikTok, YouTube, Facebook, X, WhatsApp), links de ajuda e formas de pagamento
@@ -32,7 +33,7 @@ O painel controla:
 | Catálogo | Adiciona, edita, duplica, reordena e exclui produtos: preço, preço "de", tamanhos, foto (enviada do celular ou por link), novidade, mais vendido, esgotado |
 | Categorias | Cria, renomeia, reordena, troca foto ou ilustração |
 | Vídeo | Troca o vídeo da bolinha (enviar do celular, link MP4 ou YouTube), tamanho, formato, borda, etiqueta, posição inicial e o que acontece ao tocar |
-| Marca e contato | Nome e logo (texto ou imagem), **número do WhatsApp**, cupom e %, parcelas, frete grátis, redes sociais, título do Google |
+| Marca e contato | Nome e logo (texto ou imagem), **número do WhatsApp**, cupom e %, parcelas, frete grátis, sacola e lupa de pesquisa (liga/desliga), redes sociais, título do Google |
 | Publicar | Baixar o site atualizado, restaurar de um arquivo, trocar o PIN, CSS personalizado |
 
 Também dá para **editar os textos tocando direto no site** (*Início → Editar textos tocando no site*), e tem **Desfazer/Refazer**.

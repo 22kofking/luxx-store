@@ -40,6 +40,7 @@ export default {
     minInstallment: 30,
     showCouponPrice: true,
     cart: true,
+    search: true,
     freeShipping: 299,
     shopUrl: '',
     floatWhats: true,

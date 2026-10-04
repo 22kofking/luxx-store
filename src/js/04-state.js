@@ -39,6 +39,8 @@ const STATE = (() => {
       }
       cfg = U.clone(BASE);
     }
+    // arquivos gerados antes da lupa existir: ela vem ligada
+    if (cfg.store && cfg.store.search === undefined) cfg.store.search = true;
     lastSnap = JSON.stringify(cfg);
     return cfg;
   }

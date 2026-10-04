@@ -9,6 +9,7 @@ async function boot() {
     await MEDIA.preload(C());
     R.mount();
     SHOP.init();
+    SEARCH.init();
     BUBBLE.init();
     ADMIN.init();
     // limpeza de arquivos antigos só no aparelho do dono (visitantes nunca enviam mídia)

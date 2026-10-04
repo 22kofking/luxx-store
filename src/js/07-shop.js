@@ -385,6 +385,9 @@ const SHOP = (() => {
       case 'cart':
         openCart();
         break;
+      case 'search':
+        SEARCH.open();
+        break;
       case 'close-cart':
         closeCart();
         break;

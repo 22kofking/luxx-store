@@ -118,6 +118,7 @@ R.header = (c) => {
       <a class="lx-logo" href="#top" aria-label="${U.esc(c.brand.name)} — início">${R.logo(c)}</a>
       <nav class="lx-nav" aria-label="Menu principal">${links.map((l) => `<a href="#${l.id}">${U.esc(l.label)}</a>`).join('')}</nav>
       <div class="lx-header-actions">
+        ${c.store.search !== false ? `<button class="lx-hbtn" type="button" data-act="search" aria-label="Pesquisar produtos" title="Pesquisar (/)">${icon('search')}</button>` : ''}
         <a class="lx-hbtn lx-hide-m" href="${U.esc(wa())}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">${icon('whatsapp')}</a>
         ${cart ? `<button class="lx-hbtn lx-bag-btn" data-act="cart" aria-label="Abrir sacola">${icon('bag')}<span class="lx-bag-count">0</span></button>` : ''}
       </div>
