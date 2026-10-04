@@ -177,7 +177,7 @@ const SHOP = (() => {
     const st = c.store;
     openModal(
       `<div class="lx-qv" data-pid="${U.esc(p.id)}" data-size="${U.esc(pre)}">
-        <div class="lx-qv-media">${R.badges(p)}${productMedia(p, 'art')}</div>
+        <div class="lx-qv-media">${R.badges(p)}${productMedia(p)}</div>
         <div class="lx-qv-info">
           ${cat ? `<span class="lx-card-cat">${U.esc(cat.name)}</span>` : ''}
           <h2 class="lx-h lx-qv-name">${U.esc(p.name)}</h2>
@@ -270,7 +270,7 @@ const SHOP = (() => {
       ? ls
           .map(
             (l) => `<div class="lx-line">
-          <div class="lx-line-img">${productMedia(l.p, 'art')}</div>
+          <div class="lx-line-img">${productMedia(l.p)}</div>
           <div><b>${U.esc(l.p.name)}</b>${l.size ? `<small>Tamanho: ${U.esc(l.size)}</small>` : ''}
             <div class="lx-line-price">${U.money(l.p.price * l.qty)}</div>
             <div class="lx-qty"><button type="button" data-act="qty" data-i="${l.i}" data-d="-1" aria-label="Diminuir">${icon('minus')}</button><span>${l.qty}</span><button type="button" data-act="qty" data-i="${l.i}" data-d="1" aria-label="Aumentar">${icon('plus')}</button></div>
@@ -346,7 +346,7 @@ const SHOP = (() => {
 
   /* ---------- cliques (delegação) ---------- */
   function onClick(e) {
-    if (UI.editing && e.target.closest('#luxx-root [data-edit]')) {
+    if (UI.editing && e.target.closest('#luxx-root [data-edit], #luxx-root [data-edit-img]')) {
       e.preventDefault();
       return;
     }

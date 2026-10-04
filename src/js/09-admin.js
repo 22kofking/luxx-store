@@ -115,26 +115,20 @@ const ADMIN = (() => {
       const v = g(p) || '';
       const k = MEDIA.kind(v);
       const url = MEDIA.url(v);
-      return `<div class="lxa-field"><span>${label}</span><div class="lxa-media">
-        <div class="lxa-media-prev">${url ? `<img src="${esc(url)}" alt="">` : icon('image')}</div>
-        <div class="lxa-btns" style="flex:1">
-          <span class="lxa-btn lxa-btn--sm lxa-file">${icon('upload')}${v ? 'Trocar foto' : 'Enviar foto'}<input type="file" accept="image/*" data-upload="${p}"></span>
-          ${v ? `<button type="button" class="lxa-btn lxa-btn--sm lxa-btn--red" data-a="media-clear" data-p="${p}">${icon('trash')}Remover</button>` : ''}
-        </div></div>
-        ${
-          k === 'url' || !v
-            ? `<input type="text" data-p="${p}" data-rr-blur="1" value="${k === 'url' ? esc(v) : ''}" placeholder="ou cole o link de uma imagem (https://...)" style="margin-top:8px" autocomplete="off">`
-            : hint(k === 'idb' ? 'Foto salva neste aparelho — vai junto quando você baixar o site.' : 'Foto guardada dentro do arquivo do site.')
-        }${hint(o.hint)}</div>`;
-    },
-    art: (p) => {
-      const a = g(p) || {};
-      const types = Object.entries(ART.TYPES).map(([k, v]) => [k, v.label]);
-      return `<div class="lxa-art-prev"><div data-artprev="${p}">${ART.svg(a)}</div><div style="flex:1">${F.select(p + '.type', 'Tipo de peça', types, { rr: 1 })}</div></div>
-        <div class="lxa-row">${F.color(p + '.color', 'Cor da peça', '#1c1c1c')}${F.color(p + '.detail', 'Cor do detalhe', '#ffd400')}</div>
-        ${['tee', 'hoodie', 'crewneck', 'jacket'].includes(a.type) ? F.select(p + '.print', 'Estampa', Object.entries(ART.PRINTS)) : ''}
-        ${a.type === 'sneaker' ? F.color(p + '.sole', 'Cor do solado', '#f1efe9') : ''}
-        ${a.type === 'slide' ? F.color(p + '.strapColor', 'Cor da tira', hex6(a.color, '#1c1c1c')) : ''}`;
+      return `<div class="lxa-field lxa-photo">
+        <div class="lxa-photo-prev${url ? ' has' : ''}">${url ? `<img src="${esc(url)}" alt="">` : `${icon('image')}<small>Sem foto</small>`}</div>
+        <div class="lxa-photo-side">
+          <span class="lxa-label">${label}</span>
+          <span class="lxa-btn lxa-btn--y lxa-btn--block lxa-file">${icon('upload')}${v ? 'Trocar foto' : 'Escolher foto'}<input type="file" accept="image/*" data-upload="${p}" aria-label="${esc(label)}"></span>
+          ${v ? `<button type="button" class="lxa-btn lxa-btn--sm lxa-btn--red lxa-btn--block" data-a="media-clear" data-p="${p}">${icon('trash')}Remover foto</button>` : ''}
+          ${hint(o.hint || 'Da galeria ou tire na hora com a câmera.')}
+        </div>
+      </div>
+      ${
+        k === 'url' || !v
+          ? `<input type="text" class="lxa-photo-link" data-p="${p}" data-rr-blur="1" value="${k === 'url' ? esc(v) : ''}" placeholder="ou cole o link de uma imagem (https://…)" autocomplete="off" aria-label="Link da imagem">`
+          : hint(k === 'idb' ? 'Foto salva neste aparelho. Ela vai junto quando você baixar o site.' : 'Foto guardada dentro do arquivo do site.')
+      }`;
     },
     objlist: (p, fields, tpl, o = {}) => {
       const arr = g(p) || [];
@@ -177,6 +171,16 @@ const ADMIN = (() => {
     return `<h2 class="lxa-h">Fala, chefe! ⚡</h2>
       <p class="lxa-sub">Aqui você muda <b>tudo</b> do site: cores, fontes, textos, produtos, fotos e o vídeo da bolinha. Tudo aparece na hora.</p>
       ${stale}
+      ${(() => {
+        const n = c.products.filter((p) => !p.img).length;
+        return n
+          ? card(
+              'Escolha as fotos dos produtos',
+              `<p class="lxa-note">${n} ${n === 1 ? 'produto ainda não tem' : 'produtos ainda não têm'} foto. No site aparece "Foto em breve" no lugar.</p><button type="button" class="lxa-btn lxa-btn--sm lxa-btn--y" data-go="produtos">${icon('image')}Escolher fotos</button>`,
+              'lxa-warn'
+            )
+          : '';
+      })()}
       ${
         waNumber()
           ? ''
@@ -187,7 +191,7 @@ const ADMIN = (() => {
             )
       }
       <div class="lxa-hub">
-        <button type="button" class="wide" data-a="edit-mode">${icon('edit')}<span>Editar textos tocando no site<br><small>Toque em qualquer título ou frase e escreva por cima.</small></span></button>
+        <button type="button" class="wide" data-a="edit-mode">${icon('edit')}<span>Editar textos e fotos tocando no site<br><small>Toque num texto para escrever por cima, ou numa foto para trocar.</small></span></button>
         <button type="button" data-go="produtos">${icon('tag')}Catálogo<small>${c.products.length} produtos</small></button>
         <button type="button" data-go="cores">${icon('palette')}Cores<small>Fundo, texto, borda, botões…</small></button>
         <button type="button" data-go="fontes">${icon('type')}Fontes<small>${esc(c.theme.fonts.title)} + ${esc(c.theme.fonts.body)}</small></button>
@@ -310,6 +314,13 @@ const ADMIN = (() => {
         F.range('theme.style.border', 'Espessura das bordas', 0, 4, 1, 'px')
     )}
     ${card(
+      'Fotos dos produtos',
+      F.select('theme.style.imgFit', 'Como a foto aparece no card', [
+        ['cover', 'Preencher o quadro (pode cortar as bordas)'],
+        ['contain', 'Foto inteira, sem cortar'],
+      ], { hint: 'Fotos com fundo branco ou recortadas ficam melhores em "Foto inteira".' })
+    )}
+    ${card(
       'Layout',
       F.range('theme.style.maxWidth', 'Largura máxima do conteúdo', 1000, 1680, 20, 'px') +
         F.range('theme.style.space', 'Espaço entre as seções', 0.6, 1.6, 0.05, 'x') +
@@ -357,8 +368,8 @@ const ADMIN = (() => {
             ['small', 'Legenda'],
           ], { big: 'Novo', small: 'Legenda' }, { label: 'Destaques embaixo dos botões' }) +
           '<div style="height:14px"></div>' +
-          F.media(sp(id, 'img'), 'Foto do banner (opcional)', { hint: 'Sem foto, aparece a ilustração abaixo.' }) +
-          (g(sp(id, 'img')) ? F.range(sp(id, 'overlay'), 'Escurecer a foto (tela cheia)', 0, 0.9, 0.05, '%') : `<div class="lxa-label" style="margin-top:12px">Ilustração do banner</div>${F.art(sp(id, 'art'))}`)
+          F.media(sp(id, 'img'), 'Foto do banner', { hint: 'Sem foto, o banner mostra só o círculo amarelo com o raio. Uma foto de modelo usando a coleção fica perfeita.' }) +
+          (g(sp(id, 'img')) ? F.range(sp(id, 'overlay'), 'Escurecer a foto (tela cheia)', 0, 0.9, 0.05, '%') : '')
         );
       case 'marquee':
         return F.list(sp(id, 'words'), 'Palavras da faixa');
@@ -455,6 +466,7 @@ const ADMIN = (() => {
     const P = (k) => `products.${i}.${k}`;
     const cats = [['', '— sem categoria —']].concat(cfg().categories.map((k) => [k.id, k.name]));
     return (
+      F.media(P('img'), 'Foto do produto', { hint: 'Da galeria ou tire na hora. Foto vertical ou quadrada fica melhor.' }) +
       F.text(P('name'), 'Nome do produto') +
       `<div class="lxa-row">${F.money(P('price'), 'Preço (R$)')}${F.money(P('old'), 'Preço antigo "de"', { ph: 'opcional', hint: 'Mostra riscado + % OFF' })}</div>` +
       F.select(P('cat'), 'Categoria', cats, { rr: 1 }) +
@@ -467,8 +479,6 @@ const ADMIN = (() => {
         'Mostra "Avise-me" em vez de "Comprar"',
         true
       )}${F.toggle(P('hidden'), 'Esconder do site', 'Some do site sem apagar', true)}</div>` +
-      F.media(P('img'), 'Foto do produto', { hint: 'Fundo transparente (PNG) ou foto quadrada/vertical ficam ótimos.' }) +
-      (p.img ? '' : `<div class="lxa-label" style="margin-top:12px">Ilustração (usada quando não há foto)</div>${F.art(P('art'))}`) +
       F.text(P('link'), 'Link de compra externo (opcional)', { hint: 'Se preencher, aparece o botão "Comprar no site" (Shopee, Mercado Livre, Nuvemshop…).' }) +
       `<div class="lxa-grid2" style="margin-top:4px"><button type="button" class="lxa-btn lxa-btn--sm" data-a="prod-see" data-i="${i}">${icon('eye')}Ver no site</button><button type="button" class="lxa-btn lxa-btn--sm" data-a="prod-dup" data-i="${i}">${icon(
         'dup'
@@ -476,9 +486,12 @@ const ADMIN = (() => {
        <button type="button" class="lxa-btn lxa-btn--sm lxa-btn--red lxa-btn--block" style="margin-top:8px" data-a="prod-del" data-i="${i}">${icon('trash')}Excluir produto</button>`
     );
   }
-  const thumb = (o) => {
+  /* miniatura da lista: tocar já abre a galeria para escolher a foto */
+  const thumb = (o, path) => {
     const u = o.img && MEDIA.url(o.img);
-    return u ? `<img src="${esc(u)}" alt="">` : ART.svg(o.art);
+    return `<label class="lxa-thumb lxa-file${u ? '' : ' empty'}" title="${u ? 'Trocar foto' : 'Escolher foto'}">${u ? `<img src="${esc(u)}" alt="">` : icon('image')}<span class="lxa-thumb-cam">${icon(
+      'upload'
+    )}</span><input type="file" accept="image/*" data-upload="${path}" aria-label="${u ? 'Trocar' : 'Escolher'} foto de ${esc(o.name)}"></label>`;
   };
 
   function productList() {
@@ -490,12 +503,12 @@ const ADMIN = (() => {
     const items = list
       .map(({ p, i }) => {
         const open = opened.produtos === p.id;
-        const tags = [p.isNew && '<em class="y">Novo</em>', p.best && '<em class="y">Top</em>', p.soldout && '<em class="r">Esgotado</em>', p.hidden && '<em>Oculto</em>', offPct(p) && `<em>-${offPct(p)}%</em>`]
+        const tags = [!p.img && '<em class="r">Sem foto</em>', p.isNew && '<em class="y">Novo</em>', p.best && '<em class="y">Top</em>', p.soldout && '<em class="r">Esgotado</em>', p.hidden && '<em>Oculto</em>', offPct(p) && `<em>-${offPct(p)}%</em>`]
           .filter(Boolean)
           .join('');
         return `<div class="lxa-item${open ? ' open' : ''}${p.hidden ? ' off' : ''}">
           <div class="lxa-item-head">
-            <button type="button" class="lxa-thumb" data-a="prod-open" data-id="${esc(p.id)}" aria-label="Editar ${esc(p.name)}">${thumb(p)}</button>
+            ${thumb(p, `products.${i}.img`)}
             <button type="button" class="lxa-item-main" data-a="prod-open" data-id="${esc(p.id)}"><b data-live="products.${i}.name">${esc(p.name)}</b><small>${U.money(p.price)} · ${esc(
               (catOf(p.cat) || {}).name || 'Sem categoria'
             )}</small>${tags ? `<span class="lxa-tags">${tags}</span>` : ''}</button>
@@ -510,11 +523,14 @@ const ADMIN = (() => {
       .join('');
     return items || '<p class="lxa-note">Nenhum produto encontrado.</p>';
   }
-  V.produtos = () =>
-    `<h2 class="lxa-h">Catálogo (${cfg().products.length})</h2><p class="lxa-sub">Toque num produto para editar preço, fotos, tamanhos e mais. As setas mudam a ordem no site.</p>
+  V.produtos = () => {
+    const missing = cfg().products.filter((p) => !p.img).length;
+    return `<h2 class="lxa-h">Catálogo (${cfg().products.length})</h2><p class="lxa-sub">Toque na <b>miniatura</b> para escolher a foto. Toque no <b>nome</b> para editar preço, tamanhos e o resto. As setas mudam a ordem no site.</p>
+      ${missing ? `<p class="lxa-note lxa-missing">${icon('image')}<span><b>${missing} ${missing === 1 ? 'produto está' : 'produtos estão'} sem foto.</b> No site aparece "Foto em breve" até você escolher.</span></p>` : ''}
       <button type="button" class="lxa-btn lxa-btn--y lxa-btn--block" data-a="prod-add" style="margin-bottom:10px">${icon('plus')}Adicionar produto</button>
       <input type="text" class="lxa-search" data-search="1" value="${esc(search)}" placeholder="Buscar produto…" aria-label="Buscar produto" autocomplete="off" enterkeyhint="search">
       <div id="lxa-plist">${productList()}</div>`;
+  };
 
   V.categorias = () => {
     const c = cfg();
@@ -524,7 +540,7 @@ const ADMIN = (() => {
         const n = c.products.filter((p) => p.cat === k.id).length;
         return `<div class="lxa-item${open ? ' open' : ''}">
           <div class="lxa-item-head">
-            <button type="button" class="lxa-thumb" data-a="cat-open" data-id="${esc(k.id)}" aria-label="Editar ${esc(k.name)}">${thumb(k)}</button>
+            ${thumb(k, `categories.${i}.img`)}
             <button type="button" class="lxa-item-main" data-a="cat-open" data-id="${esc(k.id)}"><b data-live="categories.${i}.name">${esc(k.name)}</b><small>${n} ${n === 1 ? 'produto' : 'produtos'}</small></button>
             <div class="lxa-item-tools">
               <button type="button" class="lxa-icon" data-a="cat-move" data-i="${i}" data-d="-1" aria-label="Subir"${i === 0 ? ' disabled' : ''}>${icon('up')}</button>
@@ -533,15 +549,16 @@ const ADMIN = (() => {
           </div>
           ${
             open
-              ? `<div class="lxa-item-body">${F.text(`categories.${i}.name`, 'Nome da categoria')}${F.media(`categories.${i}.img`, 'Foto da categoria (opcional)')}${
-                  k.img ? '' : `<div class="lxa-label" style="margin-top:12px">Ilustração</div>${F.art(`categories.${i}.art`)}`
-                }<button type="button" class="lxa-btn lxa-btn--sm lxa-btn--red lxa-btn--block" style="margin-top:8px" data-a="cat-del" data-i="${i}">${icon('trash')}Excluir categoria</button></div>`
+              ? `<div class="lxa-item-body">${F.media(`categories.${i}.img`, 'Foto da categoria', { hint: 'Aparece no quadro da categoria. Sem foto, fica só o nome com um raio.' })}${F.text(
+                  `categories.${i}.name`,
+                  'Nome da categoria'
+                )}<button type="button" class="lxa-btn lxa-btn--sm lxa-btn--red lxa-btn--block" style="margin-top:8px" data-a="cat-del" data-i="${i}">${icon('trash')}Excluir categoria</button></div>`
               : ''
           }
         </div>`;
       })
       .join('');
-    return `<h2 class="lxa-h">Categorias (${c.categories.length})</h2><p class="lxa-sub">Camisetas, moletons, tênis, slides… A primeira aparece em destaque (maior).</p>
+    return `<h2 class="lxa-h">Categorias (${c.categories.length})</h2><p class="lxa-sub">Camisetas, moletons, tênis, slides… A primeira aparece em destaque (maior). Toque na miniatura para escolher a foto.</p>
       <button type="button" class="lxa-btn lxa-btn--y lxa-btn--block" data-a="cat-add" style="margin-bottom:12px">${icon('plus')}Adicionar categoria</button>${items}`;
   };
 
@@ -842,9 +859,6 @@ const ADMIN = (() => {
     const out = body.querySelector(`[data-out="${p}"]`);
     if (out) out.textContent = fmtOut(v, el.dataset.unit);
     U.$$(`[data-live="${p}"]`, body).forEach((n) => (n.textContent = v));
-    const artP = p.replace(/\.(type|color|detail|print|sole|strapColor)$/, '');
-    const prev = body.querySelector(`[data-artprev="${artP}"]`);
-    if (prev) prev.innerHTML = ART.svg(U.get(cfg(), artP));
     if (p === 'store.coupon') cfg().store.coupon = String(v).trim().toUpperCase();
     const waTest = body.querySelector('[data-wa-test]');
     if (waTest) waTest.href = wa();
@@ -881,12 +895,16 @@ const ADMIN = (() => {
   }
 
   async function upload(input) {
-    const p = input.dataset.upload;
     const f = input.files && input.files[0];
     if (!f) return;
+    await storeFile(input.dataset.upload, f, input);
+  }
+
+  async function storeFile(p, f, input) {
+    STATE.checkpoint();
     const video = /^video\//.test(f.type) || p === 'bubble.video';
     if (video && f.size > 40 * 1048576 && !(await ask('Vídeo grande', `Esse vídeo tem ${U.fileSize(f.size)}. Vídeos grandes deixam o site pesado; prefira até 15 segundos.`, 'Usar mesmo assim'))) {
-      input.value = '';
+      if (input) input.value = '';
       return;
     }
     SHOP.toast(video ? 'Carregando vídeo…' : 'Carregando foto…', 'upload');
@@ -1008,7 +1026,6 @@ const ADMIN = (() => {
           old: 0,
           desc: 'Descreva a peça: tecido, caimento, detalhes que fazem a diferença.',
           sizes: 'P, M, G, GG',
-          art: { type: 'tee', color: '#1c1c1c', detail: c.theme.colors.accent, print: 'bolt' },
           img: '',
           isNew: true,
           best: false,
@@ -1055,7 +1072,7 @@ const ADMIN = (() => {
         let id = 'categoria';
         let n = 2;
         while (c.categories.some((k) => k.id === id)) id = 'categoria-' + n++;
-        c.categories.push({ id, name: 'Nova categoria', art: { type: 'tag', color: '#1c1c1c', detail: c.theme.colors.accent }, img: '' });
+        c.categories.push({ id, name: 'Nova categoria', img: '' });
         opened.categorias = id;
         return commit();
       }
@@ -1175,7 +1192,7 @@ const ADMIN = (() => {
       });
     peekBar.hidden = !(isOpen && peeking && !UI.editing);
     if (!editBar)
-      editBar = floatBtn('lxa-editbar', `<span>${icon('edit')} Toque num texto com borda tracejada e escreva.</span><button type="button">Concluir</button>`, (e) => {
+      editBar = floatBtn('lxa-editbar', `<span>${icon('edit')} Toque num texto para escrever ou numa foto para trocar.</span><button type="button">Concluir</button>`, (e) => {
         if (e.target.closest('button')) editMode(false);
       });
     editBar.hidden = !UI.editing;
@@ -1270,6 +1287,27 @@ const ADMIN = (() => {
     }
     refreshFloats();
   }
+  let picker = null;
+  function pickImage(path) {
+    if (!picker) {
+      picker = document.createElement('input');
+      picker.type = 'file';
+      picker.accept = 'image/*';
+      picker.className = 'lxa-picker';
+      picker.setAttribute('aria-hidden', 'true');
+      picker.tabIndex = -1;
+      picker.addEventListener('change', () => {
+        const f = picker.files && picker.files[0];
+        const p = picker.dataset.path;
+        picker.value = '';
+        if (f) storeFile(p, f);
+      });
+      document.body.appendChild(picker);
+    }
+    picker.dataset.path = path;
+    picker.click();
+  }
+
   function inlineInput(e) {
     const el = e.target.closest && e.target.closest('#luxx-root [data-edit][contenteditable]');
     if (!el) return;
@@ -1295,6 +1333,13 @@ const ADMIN = (() => {
       status();
     });
     document.addEventListener('input', inlineInput);
+    document.addEventListener('click', (e) => {
+      if (!UI.editing) return;
+      const spot = e.target.closest('#luxx-root [data-edit-img]');
+      if (!spot || e.target.closest('[data-edit]')) return;
+      e.preventDefault();
+      pickImage(spot.dataset.editImg);
+    });
     document.addEventListener('keydown', (e) => {
       const el = e.target.closest && e.target.closest('#luxx-root [data-edit][contenteditable]');
       if (el && e.key === 'Enter' && !el.dataset.ml) {

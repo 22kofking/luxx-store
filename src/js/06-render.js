@@ -75,11 +75,14 @@ const couponPrice = (p) => {
   const st = C().store;
   return st.couponPct > 0 && st.showCouponPrice && !p.soldout ? p.price * (1 - st.couponPct / 100) : 0;
 };
-const productMedia = (p, cls = 'art', alt) => {
+/* foto escolhida pelo dono no painel; sem foto, um espaço discreto "Foto em breve" */
+const noPhoto = (label) => `<span class="lx-noimg" role="img" aria-label="${U.esc(label)}: foto em breve">${icon('bolt')}<small>Foto em breve</small></span>`;
+const productMedia = (p, alt) => {
   const src = p.img && MEDIA.url(p.img);
   if (src) return `<img src="${U.esc(src)}" alt="${U.esc(alt || p.name)}" loading="lazy" decoding="async">`;
-  return ART.svg(p.art, { cls, label: alt || p.name });
+  return noPhoto(alt || p.name);
 };
+const imgSpot = (path, has) => ` data-edit-img="${path}" data-img-label="${has ? 'Trocar foto' : 'Adicionar foto'}"`;
 
 const R = {};
 
@@ -136,7 +139,7 @@ R.hero = (c) => {
   const s = c.sections.hero;
   const img = s.img && MEDIA.url(s.img);
   const full = s.layout === 'full' && img;
-  const visual = img ? `<img class="lx-stage-img" src="${U.esc(img)}" alt="">` : ART.svg(s.art);
+  const visual = img ? `<img class="lx-stage-img" src="${U.esc(img)}" alt="">` : '';
   const b1 = linkTo(s.btn1Link);
   return `<section class="lx-hero${full ? ' lx-hero--full' : ''}" id="hero">
     ${full ? `<div class="lx-hero-photo" style="background-image:url('${U.esc(cssUrl(img))}')"></div><div class="lx-hero-shade" style="opacity:${+s.overlay}"></div>` : ''}
@@ -168,8 +171,8 @@ R.hero = (c) => {
           ? ''
           : `<div class="lx-stage lx-reveal">
         <div class="lx-stage-orbit"></div>
-        <div class="lx-stage-disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ART.BOLT}" fill="currentColor"/></svg></div>
-        <div class="lx-stage-item">${visual}</div>
+        <div class="lx-stage-disc">${icon('bolt')}</div>
+        <div class="lx-stage-item"${imgSpot('sections.hero.img', !!img)}>${visual}</div>
         ${s.sticker1 ? `<span class="lx-sticker lx-sticker--a"${ed('sections.hero.sticker1')}>${tx('sections.hero.sticker1')}</span>` : ''}
         ${s.sticker2 ? `<span class="lx-sticker lx-sticker--b"${ed('sections.hero.sticker2')}>${tx('sections.hero.sticker2')}</span>` : ''}
       </div>`
@@ -226,7 +229,7 @@ R.card = (p, rank) => {
   const cat = catOf(p.cat);
   const name = U.esc(p.name);
   return `<article class="lx-card${p.soldout ? ' is-out' : ''}" data-pid="${U.esc(p.id)}">
-    <a class="lx-card-media" href="#produto-${U.esc(p.id)}" data-act="view" data-pid="${U.esc(p.id)}" aria-label="Ver detalhes: ${name}">
+    <a class="lx-card-media" href="#produto-${U.esc(p.id)}" data-act="view" data-pid="${U.esc(p.id)}" aria-label="Ver detalhes: ${name}"${imgSpot('products.' + i + '.img', !!p.img)}>
       ${R.badges(p)}
       ${rank ? `<span class="lx-rank" aria-hidden="true">${String(rank).padStart(2, '0')}</span>` : ''}
       ${productMedia(p)}
@@ -265,11 +268,11 @@ R.categorias = (c) => {
     .map((k, i) => {
       const n = vis.filter((p) => p.cat === k.id).length;
       const src = k.img && MEDIA.url(k.img);
-      return `<a class="lx-cat" href="#catalogo" data-act="filter" data-cat="${U.esc(k.id)}">
+      return `<a class="lx-cat${src ? ' has-img' : ''}" href="#catalogo" data-act="filter" data-cat="${U.esc(k.id)}">
         <span class="lx-cat-name"${ed('categories.' + i + '.name')}>${U.esc(k.name)}</span>
         <span class="lx-cat-count">${n} ${n === 1 ? 'peça' : 'peças'}</span>
         <span class="lx-cat-go">${icon('arrow')}</span>
-        <span class="lx-cat-art">${src ? `<img src="${U.esc(src)}" alt="" loading="lazy">` : ART.svg(k.art)}</span>
+        <span class="lx-cat-art${src ? '' : ' is-empty'}"${imgSpot('categories.' + i + '.img', !!src)}>${src ? `<img src="${U.esc(src)}" alt="" loading="lazy">` : icon('bolt')}</span>
       </a>`;
     })
     .join('');

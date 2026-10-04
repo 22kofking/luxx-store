@@ -8,6 +8,7 @@ Preto + amarelo raio, textos de impacto em português e funciona no celular e no
 
 - **Banner principal** com a Coleção VOLT (texto + ilustração, ou foto de fundo em tela cheia)
 - **Novidades** (carrossel) e **Mais vendidos** (com ranking 01, 02, 03…)
+- **Fotos de verdade**: você escolhe a foto de cada produto, categoria e do banner no painel. Enquanto uma peça não tem foto, aparece um espaço discreto escrito "Foto em breve"
 - **Categorias**: camisetas, moletons, tênis, slides, jaquetas, calças, bermudas, bonés e acessórios
 - **Promoção com o cupom LUXX10**: 10% OFF em qualquer compra, botão de copiar o cupom
 - **Catálogo completo** com filtro por categoria e ordenação
@@ -28,15 +29,15 @@ O painel controla:
 | --- | --- |
 | Cores | Fundo, texto, títulos, bordas, botões, selos, preço, barra do topo, cabeçalho, promoção, rodapé, WhatsApp. Tem 5 temas prontos |
 | Fontes | Mais de 40 fontes do Google (ou qualquer outra pelo nome), peso, tamanho, espaçamento, caixa alta e itálico |
-| Estilo | Arredondamento, bordas, botões, largura, espaçamento, colunas, brilho neon, textura e animações |
+| Estilo | Arredondamento, bordas, botões, largura, espaçamento, colunas, como a foto aparece no card (preencher ou inteira), brilho neon, textura e animações |
 | Seções e textos | Liga/desliga e reordena as seções, edita todos os textos |
-| Catálogo | Adiciona, edita, duplica, reordena e exclui produtos: preço, preço "de", tamanhos, foto (enviada do celular ou por link), novidade, mais vendido, esgotado |
-| Categorias | Cria, renomeia, reordena, troca foto ou ilustração |
+| Catálogo | Adiciona, edita, duplica, reordena e exclui produtos: **foto** (da galeria, da câmera ou por link; dá para escolher tocando direto na miniatura da lista), preço, preço "de", tamanhos, novidade, mais vendido, esgotado. Produtos sem foto ficam marcados "Sem foto" |
+| Categorias | Cria, renomeia, reordena e escolhe a foto (vira o fundo do quadro da categoria) |
 | Vídeo | Troca o vídeo da bolinha (enviar do celular, link MP4 ou YouTube), tamanho, formato, borda, etiqueta, posição inicial e o que acontece ao tocar |
 | Marca e contato | Nome e logo (texto ou imagem), **número do WhatsApp**, cupom e %, parcelas, frete grátis, sacola e lupa de pesquisa (liga/desliga), redes sociais, título do Google |
 | Publicar | Baixar o site atualizado, restaurar de um arquivo, trocar o PIN, CSS personalizado |
 
-Também dá para **editar os textos tocando direto no site** (*Início → Editar textos tocando no site*), e tem **Desfazer/Refazer**.
+Também dá para **editar textos e fotos tocando direto no site** (*Início → Editar textos e fotos tocando no site*): toque num texto para escrever ou numa foto para trocar. E tem **Desfazer/Refazer**.
 
 Nos textos, `{cupom}`, `{desconto}`, `{frete}`, `{parcelas}`, `{loja}` e `{ano}` são preenchidos automaticamente.
 
@@ -72,6 +73,7 @@ src/css/site.css      visual do site (tudo via variáveis CSS)
 src/css/panel.css     visual do painel
 src/js/*.js           módulos (render, sacola, bolinha, painel, exportação…)
 assets/luxx-bubble.mp4  vídeo padrão (H.264), gerado das ilustrações
+tools/video-art.js    ilustrações das peças (usadas só para gerar esse vídeo)
 tools/build.mjs       junta tudo em "LUXX STORE SITE.html" + index.html
 tools/make-video.mjs  recria o vídeo padrão (Playwright + ffmpeg)
 ```
@@ -84,4 +86,4 @@ node tools/build.mjs --artifact saida.html   # versão para publicar como Artifa
 
 Dentro do claude.ai o botão "Baixar site atualizado" usa o recurso `downloads` da plataforma; no arquivo comum, um download normal do navegador.
 
-As ilustrações das peças são SVG desenhadas em código (`src/js/02-art.js`) e trocadas por fotos reais pelo painel.
+O site não usa ilustrações: as fotos são escolhidas pelo dono no painel. As ilustrações em `tools/video-art.js` servem só para gerar o vídeo padrão da bolinha.

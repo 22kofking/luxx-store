@@ -149,6 +149,7 @@ const THEME = (() => {
         ['--tls', (f.titleSpacing || 0) + 'em'], ['--tt', f.upper ? 'uppercase' : 'none'], ['--tst', f.italic ? 'italic' : 'normal'],
         ['--r', (s.radius ?? 18) + 'px'], ['--br', (s.btnRadius ?? 999) + 'px'], ['--bw', (s.border ?? 1) + 'px'],
         ['--maxw', (s.maxWidth || 1280) + 'px'], ['--space', s.space || 1], ['--cols-d', s.colsDesk || 4], ['--cols-m', s.colsMob || 2],
+        ['--img-fit', s.imgFit === 'contain' ? 'contain' : 'cover'],
         ['color-scheme', U.luma(c.bg) < 0.5 ? 'dark' : 'light'],
       ]
         .map(([k, v]) => `${k}:${v}`)

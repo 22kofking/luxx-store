@@ -94,7 +94,7 @@ const SEARCH = (() => {
   const row = (p, q) => {
     const cat = catOf(p.cat);
     return `<button class="lx-sr-row" type="button" data-sact="go" data-pid="${U.esc(p.id)}">
-      <span class="lx-sr-img">${productMedia(p, 'art')}</span>
+      <span class="lx-sr-img">${productMedia(p)}</span>
       <span class="lx-sr-info"><b>${q ? mark(p.name, q) : U.esc(p.name)}</b><small>${U.esc(cat ? cat.name : '')}${p.soldout ? ' · Esgotado' : ''}</small></span>
       <span class="lx-sr-price">${+p.old > +p.price ? `<s>${U.money(p.old)}</s>` : ''}${U.money(p.price)}</span>
     </button>`;

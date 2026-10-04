@@ -21,7 +21,8 @@ const SIZE = 400;
 const FPS = 30;
 const OUT = path.join(ROOT, 'assets', 'luxx-bubble.mp4');
 
-const js = ['00-util.js', '02-art.js'].map((f) => fs.readFileSync(path.join(ROOT, 'src/js', f), 'utf8')).join('\n');
+// as ilustrações das peças só existem para gerar este vídeo (o site usa as fotos enviadas no painel)
+const js = [path.join(ROOT, 'src/js/00-util.js'), path.join(ROOT, 'tools/video-art.js')].map((f) => fs.readFileSync(f, 'utf8')).join('\n');
 
 const html = `<!doctype html><html><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Unbounded:wght@800;900&display=swap" rel="stylesheet">

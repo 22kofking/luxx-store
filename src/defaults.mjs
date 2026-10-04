@@ -13,7 +13,6 @@ const hash = (s) => {
 };
 
 const Y = '#ffd400';
-const K = '#1c1c1c';
 
 export default {
   v: 1,
@@ -104,6 +103,7 @@ export default {
       glow: true,
       grain: true,
       anim: true,
+      imgFit: 'cover',
     },
     css: '',
   },
@@ -134,7 +134,6 @@ export default {
         { big: '24h', small: 'Envio expresso' },
         { big: '30 dias', small: 'Troca fácil' },
       ],
-      art: { type: 'hoodie', color: K, detail: Y, print: 'bolt' },
       img: '',
       overlay: 0.55,
       sticker1: 'Novo drop',
@@ -229,101 +228,101 @@ export default {
     },
   },
   categories: [
-    { id: 'camisetas', name: 'Camisetas', art: { type: 'tee', color: K, detail: Y, print: 'bolt' }, img: '' },
-    { id: 'moletons', name: 'Moletons', art: { type: 'hoodie', color: Y, detail: '#111111', print: 'logo' }, img: '' },
-    { id: 'tenis', name: 'Tênis', art: { type: 'sneaker', color: '#f4f2ee', detail: Y, sole: '#ffffff' }, img: '' },
-    { id: 'slides', name: 'Slides', art: { type: 'slide', color: K, detail: '#111111', strapColor: Y }, img: '' },
-    { id: 'jaquetas', name: 'Jaquetas', art: { type: 'jacket', color: '#161616', detail: Y, print: 'logo' }, img: '' },
-    { id: 'calcas', name: 'Calças', art: { type: 'pants', color: '#2a2a2a', detail: Y }, img: '' },
-    { id: 'bermudas', name: 'Bermudas', art: { type: 'shorts', color: '#5f5f5f', detail: Y }, img: '' },
-    { id: 'bones', name: 'Bonés', art: { type: 'cap', color: K, detail: Y }, img: '' },
-    { id: 'acessorios', name: 'Acessórios', art: { type: 'chain', color: '#d9b44a', detail: Y }, img: '' },
+    { id: 'camisetas', name: 'Camisetas', img: '' },
+    { id: 'moletons', name: 'Moletons', img: '' },
+    { id: 'tenis', name: 'Tênis', img: '' },
+    { id: 'slides', name: 'Slides', img: '' },
+    { id: 'jaquetas', name: 'Jaquetas', img: '' },
+    { id: 'calcas', name: 'Calças', img: '' },
+    { id: 'bermudas', name: 'Bermudas', img: '' },
+    { id: 'bones', name: 'Bonés', img: '' },
+    { id: 'acessorios', name: 'Acessórios', img: '' },
   ],
   products: [
     {
       id: 'p1', name: 'Camiseta Oversized Volt', cat: 'camisetas', price: 149.9, old: 189.9,
       desc: 'Algodão premium penteado, modelagem oversized e estampa de raio em silk de alta definição. A peça que abre qualquer visual.',
-      sizes: 'P, M, G, GG, XG', art: { type: 'tee', color: K, detail: Y, print: 'bolt' }, isNew: true, best: true,
+      sizes: 'P, M, G, GG, XG', img: '', isNew: true, best: true,
     },
     {
       id: 'p2', name: 'Camiseta Heavy Logo', cat: 'camisetas', price: 129.9, old: 0,
       desc: 'Malha encorpada, gola canelada reforçada e logo LUXX frontal. Branco gelo que não perde a pose.',
-      sizes: 'P, M, G, GG, XG', art: { type: 'tee', color: '#f1efe9', detail: '#111111', print: 'logo' }, best: true,
+      sizes: 'P, M, G, GG, XG', img: '', best: true,
     },
     {
       id: 'p3', name: 'Camiseta Boxy Thunder', cat: 'camisetas', price: 139.9, old: 0,
       desc: 'Corte boxy, ombro caído e o amarelo raio pra quem não tem medo de ser visto.',
-      sizes: 'P, M, G, GG', art: { type: 'tee', color: Y, detail: '#111111', print: 'small' }, isNew: true,
+      sizes: 'P, M, G, GG', img: '', isNew: true,
     },
     {
       id: 'p4', name: 'Moletom Hoodie Blackout', cat: 'moletons', price: 289.9, old: 349.9,
       desc: 'Moletom peluciado por dentro, capuz forrado e raio em destaque. Quente por dentro, brabo por fora.',
-      sizes: 'P, M, G, GG, XG', art: { type: 'hoodie', color: K, detail: Y, print: 'bolt' }, best: true,
+      sizes: 'P, M, G, GG, XG', img: '', best: true,
     },
     {
       id: 'p5', name: 'Moletom Hoodie Raio', cat: 'moletons', price: 299.9, old: 0,
       desc: 'O amarelo mais desejado da coleção. Bolso canguru, punhos canelados e logo LUXX no peito.',
-      sizes: 'P, M, G, GG', art: { type: 'hoodie', color: Y, detail: '#111111', print: 'logo' }, isNew: true, best: true,
+      sizes: 'P, M, G, GG', img: '', isNew: true, best: true,
     },
     {
       id: 'p6', name: 'Moletom Careca Signature', cat: 'moletons', price: 249.9, old: 0,
       desc: 'Gola careca, cinza mescla e assinatura LUXX repetida. Minimalista na medida certa.',
-      sizes: 'P, M, G, GG', art: { type: 'crewneck', color: '#6b6b6b', detail: Y, print: 'stack' },
+      sizes: 'P, M, G, GG', img: '',
     },
     {
       id: 'p7', name: 'Jaqueta Corta-Vento Storm', cat: 'jaquetas', price: 389.9, old: 0,
       desc: 'Tecido leve que corta o vento, faixa amarela em destaque e zíper frontal. Feita pra chuva, vento e olhares.',
-      sizes: 'P, M, G, GG', art: { type: 'jacket', color: '#161616', detail: Y, print: 'logo' }, isNew: true,
+      sizes: 'P, M, G, GG', img: '', isNew: true,
     },
     {
       id: 'p8', name: 'Calça Cargo Tactical', cat: 'calcas', price: 259.9, old: 0,
       desc: 'Sarja com elastano, bolsos cargo com lapela e barra jogger. Conforto de pista, presença de passarela.',
-      sizes: '38, 40, 42, 44, 46', art: { type: 'pants', color: '#262626', detail: Y }, best: true,
+      sizes: '38, 40, 42, 44, 46', img: '', best: true,
     },
     {
       id: 'p9', name: 'Bermuda Moletom Volt', cat: 'bermudas', price: 159.9, old: 0,
       desc: 'Moletom leve, cordão amarelo e caimento acima do joelho. O uniforme oficial do verão.',
-      sizes: 'P, M, G, GG', art: { type: 'shorts', color: '#5f5f5f', detail: Y },
+      sizes: 'P, M, G, GG', img: '',
     },
     {
       id: 'p10', name: 'Tênis Street Runner LX', cat: 'tenis', price: 499.9, old: 599.9,
       desc: 'Cabedal premium, entressola de alto amortecimento e o raio LUXX na lateral. Branco que brilha de longe.',
-      sizes: '38, 39, 40, 41, 42, 43, 44', art: { type: 'sneaker', color: '#f4f2ee', detail: Y, sole: '#ffffff' }, best: true,
+      sizes: '38, 39, 40, 41, 42, 43, 44', img: '', best: true,
     },
     {
       id: 'p11', name: 'Tênis Chunky Blackout', cat: 'tenis', price: 549.9, old: 0,
       desc: 'Solado robusto, all black com detalhes em amarelo raio. Pisada pesada de quem chega chegando.',
-      sizes: '38, 39, 40, 41, 42, 43, 44', art: { type: 'sneaker', color: '#1f1f1f', detail: Y, sole: '#2e2e2e' }, isNew: true,
+      sizes: '38, 39, 40, 41, 42, 43, 44', img: '', isNew: true,
     },
     {
       id: 'p12', name: 'Slide LUXX Comfort', cat: 'slides', price: 149.9, old: 0,
       desc: 'Palmilha anatômica super macia e tira com logo LUXX. Do rolê à piscina com o mesmo estilo.',
-      sizes: '37/38, 39/40, 41/42, 43/44', art: { type: 'slide', color: K, detail: Y }, best: true,
+      sizes: '37/38, 39/40, 41/42, 43/44', img: '', best: true,
     },
     {
       id: 'p13', name: 'Slide Volt Amarelo', cat: 'slides', price: 159.9, old: 0,
       desc: 'Tira amarela raio com logo em preto. Impossível passar despercebido — até de chinelo.',
-      sizes: '37/38, 39/40, 41/42, 43/44', art: { type: 'slide', color: K, detail: '#111111', strapColor: Y }, isNew: true,
+      sizes: '37/38, 39/40, 41/42, 43/44', img: '', isNew: true,
     },
     {
       id: 'p14', name: 'Boné Trucker LUXX', cat: 'bones', price: 119.9, old: 0,
       desc: 'Aba reta, regulagem snapback e raio bordado na frente. O toque final do visual.',
-      sizes: 'Único', art: { type: 'cap', color: K, detail: Y }, isNew: true,
+      sizes: 'Único', img: '', isNew: true,
     },
     {
       id: 'p15', name: 'Corrente Cubana Gold', cat: 'acessorios', price: 189.9, old: 0,
       desc: 'Elos cubanos com banho dourado e pingente de raio. O detalhe que fecha o visual de playboy.',
-      sizes: 'Único', art: { type: 'chain', color: '#d9b44a', detail: Y }, best: true,
+      sizes: 'Único', img: '', best: true,
     },
     {
       id: 'p16', name: 'Shoulder Bag Night', cat: 'acessorios', price: 139.9, old: 0,
       desc: 'Compacta, resistente à água e com bolso frontal. Celular, chave e carteira no lugar certo.',
-      sizes: 'Único', art: { type: 'bag', color: K, detail: Y }, isNew: true,
+      sizes: 'Único', img: '', isNew: true,
     },
     {
       id: 'p17', name: 'Óculos Shield Black', cat: 'acessorios', price: 169.9, old: 0,
       desc: 'Lente espelhada com proteção UV e armação leve. Visão de cria, pose de milionário.',
-      sizes: 'Único', art: { type: 'glasses', color: '#111111', detail: Y }, soldout: true,
+      sizes: 'Único', img: '', soldout: true,
     },
   ],
   bubble: {

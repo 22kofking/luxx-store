@@ -604,47 +604,106 @@
   color: var(--a-muted);
   text-decoration: line-through;
 }
-.lxa-art-prev {
+.lxa-photo {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 12px;
+  gap: 14px;
+  align-items: stretch;
 }
-.lxa-art-prev > div:first-child {
-  width: 96px;
-  height: 96px;
-  border-radius: 12px;
-  background: radial-gradient(circle at 50% 40%, #2c2c2c, #161616);
+.lxa-photo-prev {
+  width: 116px;
+  aspect-ratio: 4 / 5;
   flex: none;
-  overflow: hidden;
-}
-.lxa-art-prev svg,
-.lxa-art-prev img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.lxa-media {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
   align-items: center;
-}
-.lxa-media-prev {
-  width: 84px;
-  height: 84px;
+  justify-content: center;
+  gap: 6px;
   border-radius: 12px;
-  background: #222;
   overflow: hidden;
-  flex: none;
-  display: grid;
-  place-items: center;
+  background: #1f1f1f;
+  border: 1.5px dashed #444;
   color: var(--a-muted);
 }
-.lxa-media-prev img,
-.lxa-media-prev video {
+.lxa-photo-prev.has {
+  border: 1px solid var(--a-line);
+}
+.lxa-photo-prev img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.lxa-photo-prev .lx-i {
+  width: 28px !important;
+  height: 28px !important;
+}
+.lxa-photo-prev small {
+  font-size: 11px;
+  font-weight: 700;
+}
+.lxa-photo-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.lxa-photo-side .lxa-label {
+  margin: 0;
+}
+#lx-admin .lxa-photo-link {
+  margin: 0 0 14px;
+}
+.lxa-photo + .lxa-hint {
+  margin: 8px 0 16px;
+}
+.lxa-thumb {
+  position: relative;
+  cursor: pointer;
+}
+.lxa-thumb.empty {
+  border: 1.5px dashed #555;
+  color: var(--a-y);
+}
+.lxa-thumb > .lx-i {
+  width: 22px !important;
+  height: 22px !important;
+}
+.lxa-thumb-cam {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--a-y);
+  color: #0a0a0a;
+}
+.lxa-thumb-cam .lx-i {
+  width: 12px !important;
+  height: 12px !important;
+}
+.lxa-missing {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 93, 93, 0.45);
+  background: rgba(255, 93, 93, 0.08);
+}
+.lxa-missing .lx-i {
+  color: var(--a-red);
+}
+.lxa-picker {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 .lxa-file {
   position: relative;

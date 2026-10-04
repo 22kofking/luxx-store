@@ -1,5 +1,6 @@
 /* ==========================================================================
-   LUXX STORE — ilustrações vetoriais das peças (usadas quando não há foto)
+   LUXX STORE — ilustrações vetoriais das peças, usadas só por make-video.mjs
+   para desenhar o vídeo padrão da bolinha (o site não usa mais ilustrações)
    Cada peça aceita: { type, color, detail, print, sole }
    ========================================================================== */
 const ART = (() => {

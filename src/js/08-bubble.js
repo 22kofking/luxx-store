@@ -37,12 +37,8 @@ const BUBBLE = (() => {
     return MEDIA.url(v);
   };
 
-  /* animação de reserva (peças surgindo) se o aparelho não tocar o vídeo */
-  const fallbackHTML = () =>
-    `<div class="lx-bubble-fb">${visibleProducts()
-      .slice(0, 5)
-      .map((p) => `<span>${ART.svg(p.art)}</span>`)
-      .join('')}</div>`;
+  /* reserva (raio pulsando) se o aparelho não tocar o vídeo */
+  const fallbackHTML = () => `<div class="lx-bubble-fb">${icon('bolt')}</div>`;
   let failed = false;
   function watchFail(v, box) {
     const ref = b().video;
