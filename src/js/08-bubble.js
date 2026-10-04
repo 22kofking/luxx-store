@@ -45,14 +45,25 @@ const BUBBLE = (() => {
       .join('')}</div>`;
   let failed = false;
   function watchFail(v, box) {
-    const fail = () => {
+    const ref = b().video;
+    let retried = false;
+    const toAnim = () => {
       if (box === frame) failed = true;
       box.querySelectorAll('video').forEach((x) => x.remove());
       if (!box.querySelector('.lx-bubble-fb')) box.insertAdjacentHTML('afterbegin', fallbackHTML());
     };
-    v.addEventListener('error', fail);
+    v.addEventListener('error', () => {
+      // vídeo guardado no arquivo: se o navegador recusar o endereço blob:, tenta direto pelos dados
+      const data = MEDIA.kind(ref) === 'embed' ? MEDIA.embedText(ref.slice(6)) : '';
+      if (!retried && data && /^blob:/.test(v.currentSrc || v.src)) {
+        retried = true;
+        v.src = data;
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      } else toAnim();
+    });
     // o vídeo padrão é MP4/H.264: se o navegador não toca esse formato, já mostra a reserva
-    if (b().video === 'media:default-video' && v.canPlayType && !v.canPlayType('video/mp4; codecs="avc1.4D401F"')) fail();
+    if (ref === 'media:default-video' && v.canPlayType && !v.canPlayType('video/mp4; codecs="avc1.4D401F"')) toAnim();
   }
 
   function mediaHTML(url, big) {
@@ -152,10 +163,10 @@ const BUBBLE = (() => {
   function tap() {
     const c = b();
     if (c.tap === 'none') return;
-    if (c.tap === 'whatsapp') window.open(wa(), '_blank', 'noopener');
+    if (c.tap === 'whatsapp') U.openLink(wa());
     else if (c.tap === 'link') {
       const h = linkTo(c.ctaLink);
-      if (isExternal(h)) window.open(h, '_blank', 'noopener');
+      if (isExternal(h)) U.openLink(h);
       else location.hash = h.replace(/^#/, '');
     } else openPlayer();
   }

@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="luxx-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton:wght@400&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Unbounded:wght@800;900&amp;display=swap">
-<style id="luxx-vars">:root{--bg:#0a0a0a;--bg2:#111111;--surface:#151515;--product-bg:#1c1c1c;--product-hi:#303030;--text:#f4f2ec;--muted:#9d9d9d;--title:#ffffff;--accent:#ffd400;--accent-text:#0a0a0a;--border:#272727;--btn-bg:#ffd400;--btn-text:#0a0a0a;--price:#ffffff;--badge-bg:#ffd400;--badge-text:#0a0a0a;--header-bg:rgba(10,10,10,0.84);--header-solid:#0a0a0a;--header-text:#f4f2ec;--topbar-bg:#ffd400;--topbar-text:#0a0a0a;--promo-bg:#ffd400;--promo-text:#0a0a0a;--footer-bg:#050505;--footer-text:#9d9d9d;--wa:#25d366;--accent-08:rgba(255,212,0,0.08);--accent-12:rgba(255,212,0,0.12);--accent-20:rgba(255,212,0,0.2);--accent-35:rgba(255,212,0,0.35);--accent-55:rgba(255,212,0,0.55);--text-08:rgba(244,242,236,0.08);--text-20:rgba(244,242,236,0.22);--f-title:'Anton', Impact, 'Arial Narrow Bold', sans-serif;--f-body:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;--f-logo:'Unbounded', 'Arial Black', Impact, sans-serif;--tw:400;--ts:1;--base:16px;--tls:0em;--tt:uppercase;--tst:normal;--r:18px;--br:999px;--bw:1px;--maxw:1280px;--space:1;--cols-d:4;--cols-m:2}</style>
+<style id="luxx-vars">:root{--bg:#0a0a0a;--bg2:#111111;--surface:#151515;--product-bg:#1c1c1c;--product-hi:#303030;--text:#f4f2ec;--muted:#9d9d9d;--title:#ffffff;--accent:#ffd400;--accent-text:#0a0a0a;--border:#272727;--btn-bg:#ffd400;--btn-text:#0a0a0a;--price:#ffffff;--badge-bg:#ffd400;--badge-text:#0a0a0a;--header-bg:rgba(10,10,10,0.84);--header-solid:#0a0a0a;--header-text:#f4f2ec;--topbar-bg:#ffd400;--topbar-text:#0a0a0a;--promo-bg:#ffd400;--promo-text:#0a0a0a;--footer-bg:#050505;--footer-text:#9d9d9d;--wa:#25d366;--accent-08:rgba(255,212,0,0.08);--accent-12:rgba(255,212,0,0.12);--accent-20:rgba(255,212,0,0.2);--accent-35:rgba(255,212,0,0.35);--accent-55:rgba(255,212,0,0.55);--text-08:rgba(244,242,236,0.08);--text-20:rgba(244,242,236,0.22);--f-title:'Anton', Impact, 'Arial Narrow Bold', sans-serif;--f-body:'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;--f-logo:'Unbounded', 'Arial Black', Impact, sans-serif;--tw:400;--ts:1;--base:16px;--tls:0em;--tt:uppercase;--tst:normal;--r:18px;--br:999px;--bw:1px;--maxw:1280px;--space:1;--cols-d:4;--cols-m:2;color-scheme:dark}</style>
 <style id="luxx-css">
 /* ==========================================================================
    LUXX STORE — estilos do site (todas as cores/fontes vêm de variáveis CSS
@@ -305,7 +305,7 @@ body.lx-btn-outline .lx-btn:not(.lx-btn--ghost):not(.lx-btn--dark):not(.lx-btn--
 /* ---------- cabeçalho ---------- */
 .lx-header {
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   z-index: 40;
   background: var(--header-bg);
   color: var(--header-text);
@@ -1987,7 +1987,7 @@ body.lx-glow .lx-card:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 18px;
   border-bottom: 1px solid var(--border);
 }
 .lx-drawer-head h2 {
@@ -2537,15 +2537,15 @@ body.lx-glow .lx-card:hover {
   letter-spacing: 0.04em;
 }
 
-/* ---------- animações de entrada ---------- */
-body.lx-anim .lx-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* ---------- animações de entrada (o conteúdo já é visível; só sobe ao entrar na tela) ---------- */
+@keyframes lx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
 }
-body.lx-anim .lx-reveal.in {
-  opacity: 1;
-  transform: none;
+body.lx-anim .lx-reveal.lx-rise {
+  animation: lx-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 body:not(.lx-anim) *,
 body:not(.lx-anim) *::before,
@@ -2562,10 +2562,6 @@ body:not(.lx-anim) *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  body.lx-anim .lx-reveal {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -3482,6 +3478,14 @@ body.lx-editing .lx-strip-track {
   color: #0a0a0a !important;
   border-color: var(--a-y) !important;
 }
+.lxa-lock-btns button.danger {
+  background: var(--a-red) !important;
+  border-color: var(--a-red) !important;
+}
+.lxa-ask h3 {
+  font-size: 18px;
+  line-height: 1.3;
+}
 @keyframes lx-shake {
   25% {
     transform: translateX(-6px);
@@ -3681,6 +3685,21 @@ U.reducedMotion = () => {
   } catch (e) {
     return false;
   }
+};
+
+/* Recursos da plataforma claude.ai (só existem quando o site abre como Artifact) */
+U.inViewer = () => !!(window.claude && typeof window.claude.use === 'function');
+U.capability = (name) => (U.inViewer() ? Promise.resolve(window.claude.use(name)).catch(() => null) : Promise.resolve(null));
+
+/* Abre um link em nova aba como se fosse um clique (window.open é bloqueado em alguns navegadores e iframes) */
+U.openLink = (url) => {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 };
 
 U.fileSize = (b) => (b > 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB');
@@ -4674,6 +4693,7 @@ const THEME = (() => {
         ['--tls', (f.titleSpacing || 0) + 'em'], ['--tt', f.upper ? 'uppercase' : 'none'], ['--tst', f.italic ? 'italic' : 'normal'],
         ['--r', (s.radius ?? 18) + 'px'], ['--br', (s.btnRadius ?? 999) + 'px'], ['--bw', (s.border ?? 1) + 'px'],
         ['--maxw', (s.maxWidth || 1280) + 'px'], ['--space', s.space || 1], ['--cols-d', s.colsDesk || 4], ['--cols-m', s.colsMob || 2],
+        ['color-scheme', U.luma(c.bg) < 0.5 ? 'dark' : 'light'],
       ]
         .map(([k, v]) => `${k}:${v}`)
         .join(';') +
@@ -5240,25 +5260,27 @@ R.page = (c) => {
 };
 
 /* ---------- montagem e comportamentos pós-render ---------- */
+/* Tudo já nasce visível (prints, prévias de link e leitores veem a página completa).
+   Só o que ainda está abaixo da tela ganha uma animação de subida, disparada um pouco
+   antes de aparecer. */
 let revealObs = null;
 function setupReveal(root) {
-  const els = U.$$('.lx-reveal', root);
-  if (!document.body.classList.contains('lx-anim') || !('IntersectionObserver' in window) || !UI.first) {
-    els.forEach((e) => e.classList.add('in'));
-    return;
-  }
   if (revealObs) revealObs.disconnect();
+  if (!document.body.classList.contains('lx-anim') || !('IntersectionObserver' in window) || !UI.first) return;
+  const vh = window.innerHeight;
   revealObs = new IntersectionObserver(
     (ents) =>
       ents.forEach((en) => {
         if (en.isIntersecting) {
-          en.target.classList.add('in');
+          en.target.classList.add('lx-rise');
           revealObs.unobserve(en.target);
         }
       }),
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+    { rootMargin: '0px 0px 12% 0px' }
   );
-  els.forEach((e) => revealObs.observe(e));
+  U.$$('.lx-reveal', root).forEach((e) => {
+    if (e.getBoundingClientRect().top > vh) revealObs.observe(e);
+  });
 }
 
 let cdTimer = null;
@@ -5510,7 +5532,7 @@ const SHOP = (() => {
               p.soldout
                 ? `<a class="lx-btn lx-btn--wa" href="${U.esc(wa(waProductMsg(p)))}" target="_blank" rel="noopener">${icon('whatsapp')}Avise-me quando chegar</a>`
                 : `${st.cart ? `<button class="lx-btn" type="button" data-act="add" data-pid="${U.esc(p.id)}">${icon('bag')}Adicionar à sacola</button>` : ''}
-                   <button class="lx-btn lx-btn--wa" type="button" data-act="buy-wa" data-pid="${U.esc(p.id)}">${icon('whatsapp')}Comprar pelo WhatsApp</button>
+                   <a class="lx-btn lx-btn--wa" data-act="buy-wa" data-pid="${U.esc(p.id)}" href="${U.esc(wa(waProductMsg(p, pre)))}" target="_blank" rel="noopener">${icon('whatsapp')}Comprar pelo WhatsApp</a>
                    ${p.link ? `<a class="lx-btn lx-btn--ghost" href="${U.esc(safeUrl(p.link))}" target="_blank" rel="noopener">Comprar no site${icon('arrow')}</a>` : ''}`
             }
           </div>
@@ -5610,7 +5632,7 @@ const SHOP = (() => {
         <div class="lx-totals"><div><span>Subtotal</span><span>${U.money(t.sub)}</span></div>
         ${t.disc ? `<div class="lx-disc"><span>Cupom ${U.esc(st.coupon)}</span><span>-${U.money(t.disc)}</span></div>` : ''}
         <div class="lx-total"><span>Total</span><span>${U.money(t.total)}</span></div></div>
-        <button class="lx-btn lx-btn--wa lx-btn--block" type="button" data-act="checkout">${icon('whatsapp')}Finalizar pelo WhatsApp</button>
+        <a class="lx-btn lx-btn--wa lx-btn--block" data-act="checkout" href="${U.esc(wa(cartMsg()))}" target="_blank" rel="noopener">${icon('whatsapp')}Finalizar pelo WhatsApp</a>
         <small style="text-align:center;color:var(--muted);font-size:12px">Você será levado ao WhatsApp com o pedido prontinho.</small></div>`
       : '';
     return `<div class="lx-drawer-head"><h2 class="lx-h" id="lx-cart-title">Sacola${n ? ` (${n})` : ''}</h2><button class="lx-x" type="button" data-act="close-cart" aria-label="Fechar sacola">${icon('close')}</button></div>
@@ -5681,6 +5703,8 @@ const SHOP = (() => {
         U.$$('.lx-size', qv).forEach((b) => b.setAttribute('aria-pressed', String(b === el)));
         const lab = qv.querySelector('#lx-size-label');
         if (lab) lab.textContent = el.dataset.size;
+        const buy = qv.querySelector('[data-act="buy-wa"]');
+        if (buy) buy.href = wa(waProductMsg(product(qv.dataset.pid), el.dataset.size));
         break;
       }
       case 'add': {
@@ -5690,12 +5714,10 @@ const SHOP = (() => {
         closeModal();
         break;
       }
-      case 'buy-wa': {
-        const s = selectedSize(el);
-        if (!s) return;
-        window.open(wa(waProductMsg(s.p, s.size)), '_blank', 'noopener');
+      case 'buy-wa':
+        // o link abre o WhatsApp sozinho; só bloqueia se faltar escolher o tamanho
+        if (!selectedSize(el)) e.preventDefault();
         break;
-      }
       case 'cart':
         openCart();
         break;
@@ -5720,10 +5742,6 @@ const SHOP = (() => {
         cart.coupon = '';
         save();
         renderCart();
-        break;
-      case 'checkout':
-        if (!lines().length) return;
-        window.open(wa(cartMsg()), '_blank', 'noopener');
         break;
       case 'copy-coupon': {
         const code = C().store.coupon;
@@ -5856,14 +5874,25 @@ const BUBBLE = (() => {
       .join('')}</div>`;
   let failed = false;
   function watchFail(v, box) {
-    const fail = () => {
+    const ref = b().video;
+    let retried = false;
+    const toAnim = () => {
       if (box === frame) failed = true;
       box.querySelectorAll('video').forEach((x) => x.remove());
       if (!box.querySelector('.lx-bubble-fb')) box.insertAdjacentHTML('afterbegin', fallbackHTML());
     };
-    v.addEventListener('error', fail);
+    v.addEventListener('error', () => {
+      // vídeo guardado no arquivo: se o navegador recusar o endereço blob:, tenta direto pelos dados
+      const data = MEDIA.kind(ref) === 'embed' ? MEDIA.embedText(ref.slice(6)) : '';
+      if (!retried && data && /^blob:/.test(v.currentSrc || v.src)) {
+        retried = true;
+        v.src = data;
+        const p = v.play();
+        if (p && p.catch) p.catch(() => {});
+      } else toAnim();
+    });
     // o vídeo padrão é MP4/H.264: se o navegador não toca esse formato, já mostra a reserva
-    if (b().video === 'media:default-video' && v.canPlayType && !v.canPlayType('video/mp4; codecs="avc1.4D401F"')) fail();
+    if (ref === 'media:default-video' && v.canPlayType && !v.canPlayType('video/mp4; codecs="avc1.4D401F"')) toAnim();
   }
 
   function mediaHTML(url, big) {
@@ -5963,10 +5992,10 @@ const BUBBLE = (() => {
   function tap() {
     const c = b();
     if (c.tap === 'none') return;
-    if (c.tap === 'whatsapp') window.open(wa(), '_blank', 'noopener');
+    if (c.tap === 'whatsapp') U.openLink(wa());
     else if (c.tap === 'link') {
       const h = linkTo(c.ctaLink);
-      if (isExternal(h)) window.open(h, '_blank', 'noopener');
+      if (isExternal(h)) U.openLink(h);
       else location.hash = h.replace(/^#/, '');
     } else openPlayer();
   }
@@ -6858,7 +6887,7 @@ const ADMIN = (() => {
 
   V.publicar = () => {
     const draft = STATE.hasDraft();
-    const share = !!(navigator.canShare && window.File);
+    const share = !!(navigator.canShare && window.File) && !U.inViewer();
     const defaultPin = cfg().admin.pin === DEFAULT_PIN;
     return `<h2 class="lxa-h">Publicar e backup</h2><p class="lxa-sub">Suas mudanças já aparecem para você. Para os <b>clientes</b> verem, baixe o site atualizado e coloque no ar.</p>
       ${card(
@@ -7072,9 +7101,12 @@ const ADMIN = (() => {
     const f = input.files && input.files[0];
     if (!f) return;
     const video = /^video\//.test(f.type) || p === 'bubble.video';
+    if (video && f.size > 40 * 1048576 && !(await ask('Vídeo grande', `Esse vídeo tem ${U.fileSize(f.size)}. Vídeos grandes deixam o site pesado; prefira até 15 segundos.`, 'Usar mesmo assim'))) {
+      input.value = '';
+      return;
+    }
     SHOP.toast(video ? 'Carregando vídeo…' : 'Carregando foto…', 'upload');
     try {
-      if (video && f.size > 40 * 1048576 && !confirm(`Esse vídeo tem ${U.fileSize(f.size)}. Vídeos grandes deixam o site pesado — prefira até 15 segundos. Usar mesmo assim?`)) return;
       const blob = video ? f : await MEDIA.shrinkImage(f);
       const { ref, persisted } = await MEDIA.save(blob, video ? 'vid' : 'img');
       U.set(cfg(), p, ref);
@@ -7211,10 +7243,17 @@ const ADMIN = (() => {
         opened.produtos = copy.id;
         return commit();
       }
-      case 'prod-del':
-        if (!confirm(`Excluir "${c.products[i].name}"? (dá pra desfazer)`)) return;
-        c.products.splice(i, 1);
-        return commit();
+      case 'prod-del': {
+        const { id, name } = c.products[i];
+        ask(`Excluir "${name}"?`, 'Dá para desfazer depois com a seta de voltar, lá em cima.', 'Excluir', true).then((ok) => {
+          const k = cfg().products.findIndex((p) => p.id === id);
+          if (!ok || k < 0) return;
+          cfg().products.splice(k, 1);
+          commit();
+          SHOP.toast('Produto excluído', 'trash');
+        });
+        return;
+      }
       case 'prod-see': {
         const p = c.products[i];
         peek(true);
@@ -7237,14 +7276,18 @@ const ADMIN = (() => {
         return commit();
       }
       case 'cat-del': {
-        const k = c.categories[i];
-        const n = c.products.filter((p) => p.cat === k.id).length;
-        if (!confirm(`Excluir a categoria "${k.name}"?${n ? ` ${n} produto(s) ficarão sem categoria.` : ''}`)) return;
-        c.products.forEach((p) => {
-          if (p.cat === k.id) p.cat = '';
+        const { id, name } = c.categories[i];
+        const n = c.products.filter((p) => p.cat === id).length;
+        ask(`Excluir a categoria "${name}"?`, n ? `${n} produto(s) ficarão sem categoria (eles continuam no site).` : 'Dá para desfazer depois.', 'Excluir', true).then((ok) => {
+          const k = cfg().categories.findIndex((x) => x.id === id);
+          if (!ok || k < 0) return;
+          cfg().products.forEach((p) => {
+            if (p.cat === id) p.cat = '';
+          });
+          cfg().categories.splice(k, 1);
+          commit();
         });
-        c.categories.splice(i, 1);
-        return commit();
+        return;
       }
       /* vídeo */
       case 'video-default':
@@ -7273,10 +7316,12 @@ const ADMIN = (() => {
         return commit();
       }
       case 'reset':
-        if (!confirm('Descartar TODAS as alterações feitas neste aparelho e voltar para a versão do arquivo?')) return;
-        STATE.reset();
-        render();
-        SHOP.toast('Alterações descartadas', 'refresh');
+        ask('Descartar as alterações?', 'Tudo volta a ser como está no arquivo do site. As mudanças feitas neste aparelho somem.', 'Descartar', true).then((ok) => {
+          if (!ok) return;
+          STATE.reset();
+          render();
+          SHOP.toast('Alterações descartadas', 'refresh');
+        });
         return;
       case 'logout':
         U.store.del(OWNER_KEY);
@@ -7291,6 +7336,41 @@ const ADMIN = (() => {
   /* Abrir / fechar / espiar / modo edição                                   */
   /* ====================================================================== */
   const isOwner = () => U.store.get(OWNER_KEY) === cfg().admin.pin;
+
+  /* Confirmação dentro da página (o confirm() do navegador é bloqueado em alguns lugares e é feio no celular) */
+  function ask(title, detail, okLabel = 'Confirmar', danger = false) {
+    return new Promise((resolve) => {
+      const w = document.createElement('div');
+      w.className = 'lxa-lock lxa-ask';
+      w.setAttribute('role', 'alertdialog');
+      w.setAttribute('aria-modal', 'true');
+      w.setAttribute('aria-label', title);
+      w.innerHTML = `<form><h3>${esc(title)}</h3>${detail ? `<p>${esc(detail)}</p>` : ''}<div class="lxa-lock-btns"><button type="button" data-x="1">Cancelar</button><button type="submit"${
+        danger ? ' class="danger"' : ''
+      }>${esc(okLabel)}</button></div></form>`;
+      const onKey = (e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          done(false);
+        }
+      };
+      const done = (v) => {
+        w.remove();
+        document.removeEventListener('keydown', onKey, true);
+        resolve(v);
+      };
+      w.addEventListener('click', (e) => {
+        if (e.target === w || e.target.closest('[data-x]')) done(false);
+      });
+      w.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        done(true);
+      });
+      document.addEventListener('keydown', onKey, true);
+      document.body.appendChild(w);
+      setTimeout(() => w.querySelector('button[type="submit"]').focus(), 30);
+    });
+  }
 
   function floatBtn(cls, html, onclick) {
     const d = document.createElement('div');
@@ -7451,7 +7531,7 @@ const ADMIN = (() => {
     refreshFloats();
   }
 
-  return { init, open, show, close, enableInline, get isOpen() { return isOpen; } };
+  return { init, open, show, close, ask, enableInline, get isOpen() { return isOpen; } };
 })();
 
 /* ---- 10-export.js ---- */
@@ -7503,7 +7583,10 @@ const EXPORT = (() => {
       }
       return el;
     };
-    U.$$('script[id^="luxx-media-"]', doc).forEach((s) => s.remove());
+    // só os scripts do próprio site vão para o arquivo (nada injetado por navegador ou plataforma)
+    U.$$('script', doc).forEach((s) => {
+      if (!/^luxx-/.test(s.id) || /^luxx-media-/.test(s.id)) s.remove();
+    });
     const app = doc.getElementById('luxx-app');
     Object.entries(blocks).forEach(([id, data]) => {
       const s = doc.createElement('script');
@@ -7561,9 +7644,15 @@ const EXPORT = (() => {
   async function sizeCheck() {
     let total = 0;
     for (const r of MEDIA.refs(STATE.cfg)) total += await MEDIA.size(r);
-    if (total > 25 * 1048576) return confirm(`Fotos e vídeos somam ${U.fileSize(total)}. O arquivo vai ficar pesado para abrir no celular. Continuar?`);
+    if (total > 25 * 1048576) return ADMIN.ask('Arquivo pesado', `Fotos e vídeos somam ${U.fileSize(total)}. O arquivo pode ficar lento para abrir no celular.`, 'Continuar');
     return true;
   }
+
+  const DL_ERR = {
+    declined: 'Download cancelado.',
+    rate_limited: 'Já tem um download aguardando confirmação.',
+    too_large: 'Arquivo grande demais para salvar aqui. Use vídeos e fotos menores.',
+  };
 
   async function download(btn) {
     STATE.checkpoint();
@@ -7571,6 +7660,19 @@ const EXPORT = (() => {
     await withBusy(btn, async () => {
       try {
         const html = await build();
+        // Aberto como página do claude.ai: o navegador lá não deixa a página baixar sozinha,
+        // então quem salva é a plataforma (com confirmação do usuário)
+        if (U.inViewer()) {
+          const dl = await U.capability('downloads');
+          if (!dl) return SHOP.toast('Baixar não está disponível nesta visualização.', 'close');
+          try {
+            await dl.save({ filename: FILE, data: new Blob([html], { type: 'text/html' }) });
+            SHOP.toast(`"${FILE}" salvo (${U.fileSize(html.length)}) ⚡`, 'download');
+          } catch (err) {
+            SHOP.toast(DL_ERR[err && err.code] || 'Não foi possível salvar o arquivo aqui.', 'close');
+          }
+          return;
+        }
         const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
         const a = document.createElement('a');
         a.href = url;

@@ -453,25 +453,27 @@ R.page = (c) => {
 };
 
 /* ---------- montagem e comportamentos pós-render ---------- */
+/* Tudo já nasce visível (prints, prévias de link e leitores veem a página completa).
+   Só o que ainda está abaixo da tela ganha uma animação de subida, disparada um pouco
+   antes de aparecer. */
 let revealObs = null;
 function setupReveal(root) {
-  const els = U.$$('.lx-reveal', root);
-  if (!document.body.classList.contains('lx-anim') || !('IntersectionObserver' in window) || !UI.first) {
-    els.forEach((e) => e.classList.add('in'));
-    return;
-  }
   if (revealObs) revealObs.disconnect();
+  if (!document.body.classList.contains('lx-anim') || !('IntersectionObserver' in window) || !UI.first) return;
+  const vh = window.innerHeight;
   revealObs = new IntersectionObserver(
     (ents) =>
       ents.forEach((en) => {
         if (en.isIntersecting) {
-          en.target.classList.add('in');
+          en.target.classList.add('lx-rise');
           revealObs.unobserve(en.target);
         }
       }),
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+    { rootMargin: '0px 0px 12% 0px' }
   );
-  els.forEach((e) => revealObs.observe(e));
+  U.$$('.lx-reveal', root).forEach((e) => {
+    if (e.getBoundingClientRect().top > vh) revealObs.observe(e);
+  });
 }
 
 let cdTimer = null;

@@ -288,7 +288,7 @@ body.lx-btn-outline .lx-btn:not(.lx-btn--ghost):not(.lx-btn--dark):not(.lx-btn--
 /* ---------- cabeçalho ---------- */
 .lx-header {
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   z-index: 40;
   background: var(--header-bg);
   color: var(--header-text);
@@ -1970,7 +1970,7 @@ body.lx-glow .lx-card:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 18px;
   border-bottom: 1px solid var(--border);
 }
 .lx-drawer-head h2 {
@@ -2520,15 +2520,15 @@ body.lx-glow .lx-card:hover {
   letter-spacing: 0.04em;
 }
 
-/* ---------- animações de entrada ---------- */
-body.lx-anim .lx-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* ---------- animações de entrada (o conteúdo já é visível; só sobe ao entrar na tela) ---------- */
+@keyframes lx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
 }
-body.lx-anim .lx-reveal.in {
-  opacity: 1;
-  transform: none;
+body.lx-anim .lx-reveal.lx-rise {
+  animation: lx-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 body:not(.lx-anim) *,
 body:not(.lx-anim) *::before,
@@ -2545,10 +2545,6 @@ body:not(.lx-anim) *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-  body.lx-anim .lx-reveal {
-    opacity: 1;
-    transform: none;
   }
 }
 

@@ -196,7 +196,7 @@ const SHOP = (() => {
               p.soldout
                 ? `<a class="lx-btn lx-btn--wa" href="${U.esc(wa(waProductMsg(p)))}" target="_blank" rel="noopener">${icon('whatsapp')}Avise-me quando chegar</a>`
                 : `${st.cart ? `<button class="lx-btn" type="button" data-act="add" data-pid="${U.esc(p.id)}">${icon('bag')}Adicionar à sacola</button>` : ''}
-                   <button class="lx-btn lx-btn--wa" type="button" data-act="buy-wa" data-pid="${U.esc(p.id)}">${icon('whatsapp')}Comprar pelo WhatsApp</button>
+                   <a class="lx-btn lx-btn--wa" data-act="buy-wa" data-pid="${U.esc(p.id)}" href="${U.esc(wa(waProductMsg(p, pre)))}" target="_blank" rel="noopener">${icon('whatsapp')}Comprar pelo WhatsApp</a>
                    ${p.link ? `<a class="lx-btn lx-btn--ghost" href="${U.esc(safeUrl(p.link))}" target="_blank" rel="noopener">Comprar no site${icon('arrow')}</a>` : ''}`
             }
           </div>
@@ -296,7 +296,7 @@ const SHOP = (() => {
         <div class="lx-totals"><div><span>Subtotal</span><span>${U.money(t.sub)}</span></div>
         ${t.disc ? `<div class="lx-disc"><span>Cupom ${U.esc(st.coupon)}</span><span>-${U.money(t.disc)}</span></div>` : ''}
         <div class="lx-total"><span>Total</span><span>${U.money(t.total)}</span></div></div>
-        <button class="lx-btn lx-btn--wa lx-btn--block" type="button" data-act="checkout">${icon('whatsapp')}Finalizar pelo WhatsApp</button>
+        <a class="lx-btn lx-btn--wa lx-btn--block" data-act="checkout" href="${U.esc(wa(cartMsg()))}" target="_blank" rel="noopener">${icon('whatsapp')}Finalizar pelo WhatsApp</a>
         <small style="text-align:center;color:var(--muted);font-size:12px">Você será levado ao WhatsApp com o pedido prontinho.</small></div>`
       : '';
     return `<div class="lx-drawer-head"><h2 class="lx-h" id="lx-cart-title">Sacola${n ? ` (${n})` : ''}</h2><button class="lx-x" type="button" data-act="close-cart" aria-label="Fechar sacola">${icon('close')}</button></div>
@@ -367,6 +367,8 @@ const SHOP = (() => {
         U.$$('.lx-size', qv).forEach((b) => b.setAttribute('aria-pressed', String(b === el)));
         const lab = qv.querySelector('#lx-size-label');
         if (lab) lab.textContent = el.dataset.size;
+        const buy = qv.querySelector('[data-act="buy-wa"]');
+        if (buy) buy.href = wa(waProductMsg(product(qv.dataset.pid), el.dataset.size));
         break;
       }
       case 'add': {
@@ -376,12 +378,10 @@ const SHOP = (() => {
         closeModal();
         break;
       }
-      case 'buy-wa': {
-        const s = selectedSize(el);
-        if (!s) return;
-        window.open(wa(waProductMsg(s.p, s.size)), '_blank', 'noopener');
+      case 'buy-wa':
+        // o link abre o WhatsApp sozinho; só bloqueia se faltar escolher o tamanho
+        if (!selectedSize(el)) e.preventDefault();
         break;
-      }
       case 'cart':
         openCart();
         break;
@@ -406,10 +406,6 @@ const SHOP = (() => {
         cart.coupon = '';
         save();
         renderCart();
-        break;
-      case 'checkout':
-        if (!lines().length) return;
-        window.open(wa(cartMsg()), '_blank', 'noopener');
         break;
       case 'copy-coupon': {
         const code = C().store.coupon;

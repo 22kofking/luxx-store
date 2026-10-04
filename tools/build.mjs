@@ -68,3 +68,26 @@ const index = `<!DOCTYPE html>
 `;
 fs.writeFileSync(path.join(ROOT, 'index.html'), index);
 console.log(`ok — LUXX STORE SITE.html (${(html.length / 1024).toFixed(0)} KB, ${jsFiles.length} módulos JS) + index.html (atalho)`);
+
+// Opcional: versão para publicar como Artifact no claude.ai (a plataforma coloca o <html>/<head>;
+// o arquivo começa direto pelo <title>). Uso: node tools/build.mjs --artifact caminho/saida.html
+const ai = process.argv.indexOf('--artifact');
+if (ai > -1) {
+  const out = process.argv[ai + 1];
+  if (!out) throw new Error('Informe o caminho: --artifact saida.html');
+  const head = read('src/template.html');
+  const bodyStart = head.indexOf('<div id="luxx-root">');
+  const bodyEnd = head.lastIndexOf('</body>');
+  const content =
+    `<title>${escText(defaults.brand.name)}</title>\n` +
+    `<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n` +
+    `<link id="luxx-fonts" rel="stylesheet" href="{{FONTS}}">\n<style id="luxx-vars">{{VARS}}</style>\n<style id="luxx-css">\n{{CSS}}\n</style>\n<style id="luxx-custom"></style>\n` +
+    head.slice(bodyStart, bodyEnd);
+  const art = content.replace(/\{\{(\w+)\}\}/g, (m, k) => {
+    if (!(k in map)) throw new Error('Marcador desconhecido: ' + m);
+    return map[k];
+  });
+  fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
+  fs.writeFileSync(out, art);
+  console.log(`ok — versão Artifact: ${out} (${(art.length / 1024).toFixed(0)} KB)`);
+}

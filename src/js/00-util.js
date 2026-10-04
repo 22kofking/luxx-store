@@ -167,4 +167,19 @@ U.reducedMotion = () => {
   }
 };
 
+/* Recursos da plataforma claude.ai (só existem quando o site abre como Artifact) */
+U.inViewer = () => !!(window.claude && typeof window.claude.use === 'function');
+U.capability = (name) => (U.inViewer() ? Promise.resolve(window.claude.use(name)).catch(() => null) : Promise.resolve(null));
+
+/* Abre um link em nova aba como se fosse um clique (window.open é bloqueado em alguns navegadores e iframes) */
+U.openLink = (url) => {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
 U.fileSize = (b) => (b > 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB');

@@ -670,7 +670,7 @@ const ADMIN = (() => {
 
   V.publicar = () => {
     const draft = STATE.hasDraft();
-    const share = !!(navigator.canShare && window.File);
+    const share = !!(navigator.canShare && window.File) && !U.inViewer();
     const defaultPin = cfg().admin.pin === DEFAULT_PIN;
     return `<h2 class="lxa-h">Publicar e backup</h2><p class="lxa-sub">Suas mudanças já aparecem para você. Para os <b>clientes</b> verem, baixe o site atualizado e coloque no ar.</p>
       ${card(
@@ -884,9 +884,12 @@ const ADMIN = (() => {
     const f = input.files && input.files[0];
     if (!f) return;
     const video = /^video\//.test(f.type) || p === 'bubble.video';
+    if (video && f.size > 40 * 1048576 && !(await ask('Vídeo grande', `Esse vídeo tem ${U.fileSize(f.size)}. Vídeos grandes deixam o site pesado; prefira até 15 segundos.`, 'Usar mesmo assim'))) {
+      input.value = '';
+      return;
+    }
     SHOP.toast(video ? 'Carregando vídeo…' : 'Carregando foto…', 'upload');
     try {
-      if (video && f.size > 40 * 1048576 && !confirm(`Esse vídeo tem ${U.fileSize(f.size)}. Vídeos grandes deixam o site pesado — prefira até 15 segundos. Usar mesmo assim?`)) return;
       const blob = video ? f : await MEDIA.shrinkImage(f);
       const { ref, persisted } = await MEDIA.save(blob, video ? 'vid' : 'img');
       U.set(cfg(), p, ref);
@@ -1023,10 +1026,17 @@ const ADMIN = (() => {
         opened.produtos = copy.id;
         return commit();
       }
-      case 'prod-del':
-        if (!confirm(`Excluir "${c.products[i].name}"? (dá pra desfazer)`)) return;
-        c.products.splice(i, 1);
-        return commit();
+      case 'prod-del': {
+        const { id, name } = c.products[i];
+        ask(`Excluir "${name}"?`, 'Dá para desfazer depois com a seta de voltar, lá em cima.', 'Excluir', true).then((ok) => {
+          const k = cfg().products.findIndex((p) => p.id === id);
+          if (!ok || k < 0) return;
+          cfg().products.splice(k, 1);
+          commit();
+          SHOP.toast('Produto excluído', 'trash');
+        });
+        return;
+      }
       case 'prod-see': {
         const p = c.products[i];
         peek(true);
@@ -1049,14 +1059,18 @@ const ADMIN = (() => {
         return commit();
       }
       case 'cat-del': {
-        const k = c.categories[i];
-        const n = c.products.filter((p) => p.cat === k.id).length;
-        if (!confirm(`Excluir a categoria "${k.name}"?${n ? ` ${n} produto(s) ficarão sem categoria.` : ''}`)) return;
-        c.products.forEach((p) => {
-          if (p.cat === k.id) p.cat = '';
+        const { id, name } = c.categories[i];
+        const n = c.products.filter((p) => p.cat === id).length;
+        ask(`Excluir a categoria "${name}"?`, n ? `${n} produto(s) ficarão sem categoria (eles continuam no site).` : 'Dá para desfazer depois.', 'Excluir', true).then((ok) => {
+          const k = cfg().categories.findIndex((x) => x.id === id);
+          if (!ok || k < 0) return;
+          cfg().products.forEach((p) => {
+            if (p.cat === id) p.cat = '';
+          });
+          cfg().categories.splice(k, 1);
+          commit();
         });
-        c.categories.splice(i, 1);
-        return commit();
+        return;
       }
       /* vídeo */
       case 'video-default':
@@ -1085,10 +1099,12 @@ const ADMIN = (() => {
         return commit();
       }
       case 'reset':
-        if (!confirm('Descartar TODAS as alterações feitas neste aparelho e voltar para a versão do arquivo?')) return;
-        STATE.reset();
-        render();
-        SHOP.toast('Alterações descartadas', 'refresh');
+        ask('Descartar as alterações?', 'Tudo volta a ser como está no arquivo do site. As mudanças feitas neste aparelho somem.', 'Descartar', true).then((ok) => {
+          if (!ok) return;
+          STATE.reset();
+          render();
+          SHOP.toast('Alterações descartadas', 'refresh');
+        });
         return;
       case 'logout':
         U.store.del(OWNER_KEY);
@@ -1103,6 +1119,41 @@ const ADMIN = (() => {
   /* Abrir / fechar / espiar / modo edição                                   */
   /* ====================================================================== */
   const isOwner = () => U.store.get(OWNER_KEY) === cfg().admin.pin;
+
+  /* Confirmação dentro da página (o confirm() do navegador é bloqueado em alguns lugares e é feio no celular) */
+  function ask(title, detail, okLabel = 'Confirmar', danger = false) {
+    return new Promise((resolve) => {
+      const w = document.createElement('div');
+      w.className = 'lxa-lock lxa-ask';
+      w.setAttribute('role', 'alertdialog');
+      w.setAttribute('aria-modal', 'true');
+      w.setAttribute('aria-label', title);
+      w.innerHTML = `<form><h3>${esc(title)}</h3>${detail ? `<p>${esc(detail)}</p>` : ''}<div class="lxa-lock-btns"><button type="button" data-x="1">Cancelar</button><button type="submit"${
+        danger ? ' class="danger"' : ''
+      }>${esc(okLabel)}</button></div></form>`;
+      const onKey = (e) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          done(false);
+        }
+      };
+      const done = (v) => {
+        w.remove();
+        document.removeEventListener('keydown', onKey, true);
+        resolve(v);
+      };
+      w.addEventListener('click', (e) => {
+        if (e.target === w || e.target.closest('[data-x]')) done(false);
+      });
+      w.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        done(true);
+      });
+      document.addEventListener('keydown', onKey, true);
+      document.body.appendChild(w);
+      setTimeout(() => w.querySelector('button[type="submit"]').focus(), 30);
+    });
+  }
 
   function floatBtn(cls, html, onclick) {
     const d = document.createElement('div');
@@ -1263,5 +1314,5 @@ const ADMIN = (() => {
     refreshFloats();
   }
 
-  return { init, open, show, close, enableInline, get isOpen() { return isOpen; } };
+  return { init, open, show, close, ask, enableInline, get isOpen() { return isOpen; } };
 })();

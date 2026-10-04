@@ -46,7 +46,10 @@ const EXPORT = (() => {
       }
       return el;
     };
-    U.$$('script[id^="luxx-media-"]', doc).forEach((s) => s.remove());
+    // só os scripts do próprio site vão para o arquivo (nada injetado por navegador ou plataforma)
+    U.$$('script', doc).forEach((s) => {
+      if (!/^luxx-/.test(s.id) || /^luxx-media-/.test(s.id)) s.remove();
+    });
     const app = doc.getElementById('luxx-app');
     Object.entries(blocks).forEach(([id, data]) => {
       const s = doc.createElement('script');
@@ -104,9 +107,15 @@ const EXPORT = (() => {
   async function sizeCheck() {
     let total = 0;
     for (const r of MEDIA.refs(STATE.cfg)) total += await MEDIA.size(r);
-    if (total > 25 * 1048576) return confirm(`Fotos e vídeos somam ${U.fileSize(total)}. O arquivo vai ficar pesado para abrir no celular. Continuar?`);
+    if (total > 25 * 1048576) return ADMIN.ask('Arquivo pesado', `Fotos e vídeos somam ${U.fileSize(total)}. O arquivo pode ficar lento para abrir no celular.`, 'Continuar');
     return true;
   }
+
+  const DL_ERR = {
+    declined: 'Download cancelado.',
+    rate_limited: 'Já tem um download aguardando confirmação.',
+    too_large: 'Arquivo grande demais para salvar aqui. Use vídeos e fotos menores.',
+  };
 
   async function download(btn) {
     STATE.checkpoint();
@@ -114,6 +123,19 @@ const EXPORT = (() => {
     await withBusy(btn, async () => {
       try {
         const html = await build();
+        // Aberto como página do claude.ai: o navegador lá não deixa a página baixar sozinha,
+        // então quem salva é a plataforma (com confirmação do usuário)
+        if (U.inViewer()) {
+          const dl = await U.capability('downloads');
+          if (!dl) return SHOP.toast('Baixar não está disponível nesta visualização.', 'close');
+          try {
+            await dl.save({ filename: FILE, data: new Blob([html], { type: 'text/html' }) });
+            SHOP.toast(`"${FILE}" salvo (${U.fileSize(html.length)}) ⚡`, 'download');
+          } catch (err) {
+            SHOP.toast(DL_ERR[err && err.code] || 'Não foi possível salvar o arquivo aqui.', 'close');
+          }
+          return;
+        }
         const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
         const a = document.createElement('a');
         a.href = url;

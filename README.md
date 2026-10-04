@@ -78,6 +78,9 @@ tools/make-video.mjs  recria o vídeo padrão (Playwright + ffmpeg)
 ```bash
 npm run build   # gera o LUXX STORE SITE.html (só Node, sem dependências)
 npm run video   # recria assets/luxx-bubble.mp4 e gera o site (precisa de npm install + ffmpeg)
+node tools/build.mjs --artifact saida.html   # versão para publicar como Artifact no claude.ai
 ```
+
+Dentro do claude.ai o botão "Baixar site atualizado" usa o recurso `downloads` da plataforma; no arquivo comum, um download normal do navegador.
 
 As ilustrações das peças são SVG desenhadas em código (`src/js/02-art.js`) e trocadas por fotos reais pelo painel.

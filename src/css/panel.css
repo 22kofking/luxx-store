@@ -891,6 +891,14 @@
   color: #0a0a0a !important;
   border-color: var(--a-y) !important;
 }
+.lxa-lock-btns button.danger {
+  background: var(--a-red) !important;
+  border-color: var(--a-red) !important;
+}
+.lxa-ask h3 {
+  font-size: 18px;
+  line-height: 1.3;
+}
 @keyframes lx-shake {
   25% {
     transform: translateX(-6px);
